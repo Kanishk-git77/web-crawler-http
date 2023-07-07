@@ -7,10 +7,20 @@ function getURLsFromHtml(htmlBody, baseURL){
     for (directLink of directLinks){
        if (directLink.href.slice(0, 1) === '/') {
             // Its Relative URL
-            urls.push(`${baseURL}${directLink.href}`)
+            try {
+                const urlObj = new URL(`${baseURL}${directLink.href}`)
+                urls.push(urlObj.href)
+            } catch (err) {
+                console.log(`This Relative URL is: ${err.message}`)
+            }
        } else {
             // Its Actual URL
-            urls.push(directLink.href)
+            try {
+                const urlObj = new URL(directLink.href)
+                urls.push(urlObj.href)
+            } catch (err) {
+                console.log(`This Actual URL is: ${err.message}`)
+            }
        }
     }
     return urls

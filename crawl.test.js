@@ -41,7 +41,7 @@ test('getURLsFromHtml Absolute URLs', () => {
     </body>
     </html>
     ` 
-    const baseURL = 'https://blog.boot.dev/path/'
+    const baseURL = 'https://blog.boot.dev/path'
     const actualOutput = getURLsFromHtml(inputHTMLBody, baseURL) 
     const expectedOutput = ['https://blog.boot.dev/path/'] 
     expect(actualOutput).toEqual(expectedOutput)
@@ -60,5 +60,40 @@ test('getURLsFromHtml Relative URLs', () => {
     const baseURL = 'https://blog.boot.dev'
     const actualOutput = getURLsFromHtml(inputHTMLBody, baseURL) 
     const expectedOutput = ['https://blog.boot.dev/path/'] 
+    expect(actualOutput).toEqual(expectedOutput)
+})
+
+test('getURLsFromHtml Both URLs', () => {
+    const inputHTMLBody = `
+    <html>
+    <body>
+        <a href="https://blog.boot.dev/path1/">
+        <span>Go to Boot.dev path 1</span>
+        </a>
+        <a href="/path2/">
+        <span>Go to Boot.dev path 2</span>
+        </a>
+    </body>
+    </html>
+    ` 
+    const baseURL = 'https://blog.boot.dev'
+    const actualOutput = getURLsFromHtml(inputHTMLBody, baseURL) 
+    const expectedOutput = ['https://blog.boot.dev/path1/','https://blog.boot.dev/path2/'] 
+    expect(actualOutput).toEqual(expectedOutput)
+})
+
+test('getURLsFromHtml invalid URLs', () => {
+    const inputHTMLBody = `
+    <html>
+    <body>
+        <a href="invalid">
+        <span> Invalid !!! </span>
+        </a>
+    </body>
+    </html>
+    ` 
+    const baseURL = 'https://blog.boot.dev'
+    const actualOutput = getURLsFromHtml(inputHTMLBody, baseURL) 
+    const expectedOutput = [] 
     expect(actualOutput).toEqual(expectedOutput)
 })
