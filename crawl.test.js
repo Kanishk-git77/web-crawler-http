@@ -1,4 +1,4 @@
-const { normalizedURL } = require('./crawl.js')
+const { normalizedURL , getURLsFromHtml } = require('./crawl.js')
 const {test, expect} = require('@jest/globals')
 
 //testing
@@ -28,5 +28,37 @@ test('NormalizedURl strip `http`', () => {
     const input = 'http://wagslane.dev/path/' 
     const actualOutput = normalizedURL(input) 
     const expectedOutput = 'wagslane.dev/path' 
+    expect(actualOutput).toEqual(expectedOutput)
+})
+
+test('getURLsFromHtml Absolute URLs', () => {
+    const inputHTMLBody = `
+    <html>
+    <body>
+        <a href="https://blog.boot.dev/path/">
+        <span>Go to Boot.dev</span>
+        </a>
+    </body>
+    </html>
+    ` 
+    const baseURL = 'https://blog.boot.dev/path/'
+    const actualOutput = getURLsFromHtml(inputHTMLBody, baseURL) 
+    const expectedOutput = ['https://blog.boot.dev/path/'] 
+    expect(actualOutput).toEqual(expectedOutput)
+})
+
+test('getURLsFromHtml Relative URLs', () => {
+    const inputHTMLBody = `
+    <html>
+    <body>
+        <a href="/path/">
+        <span>Go to Boot.dev</span>
+        </a>
+    </body>
+    </html>
+    ` 
+    const baseURL = 'https://blog.boot.dev'
+    const actualOutput = getURLsFromHtml(inputHTMLBody, baseURL) 
+    const expectedOutput = ['https://blog.boot.dev/path/'] 
     expect(actualOutput).toEqual(expectedOutput)
 })
